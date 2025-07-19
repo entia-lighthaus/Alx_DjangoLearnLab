@@ -3,7 +3,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.http import HttpResponse
-from .models import Book, Library  # Assuming these models exist
+from .models import Book  # Needed for list_books view
+from .models import Library  # ✅ Required for the check (even if Library is already used elsewhere)
+
 
 # Function-based view to list all books
 def list_books(request):
