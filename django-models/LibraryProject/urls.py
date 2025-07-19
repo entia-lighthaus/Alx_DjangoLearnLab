@@ -19,10 +19,11 @@ Including another URLconf
 # LibraryProject/urls.py
 # Update your main project's urls.py file
 
+
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('relationship_app.urls')),  # Include relationship_app URLs
+    path('', include('relationship_app.urls')),  # This line includes your app's URLs
 ]

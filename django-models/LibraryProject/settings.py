@@ -28,6 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+LOGIN_REDIRECT_URL = 'list_books'
+LOGOUT_REDIRECT_URL = 'login'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf',
-    'relationship_app',
+    'LibraryProject.relationship_app',
 ]
 
 MIDDLEWARE = [
