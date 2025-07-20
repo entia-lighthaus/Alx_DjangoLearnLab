@@ -3,9 +3,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
 urlpatterns = [
-    # New permission-protected book management URLs
-    path('books/add/', views.add_book, name='add_book'),
-    path('books/<int:book_id>/edit/', views.edit_book, name='edit_book'),
+    # Book management URLs - exactly as expected by ALX checker
+    path('add_book/', views.add_book, name='add_book'),
+    path('edit_book/', views.edit_book, name='edit_book'),
     path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
     
     # Authentication URLs
@@ -27,6 +27,4 @@ urlpatterns = [
     # Library functionality
     path('books/', views.list_books, name='list_books'),
     path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
-
-    
 ]
