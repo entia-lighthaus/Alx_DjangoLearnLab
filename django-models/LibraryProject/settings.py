@@ -28,10 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-LOGIN_REDIRECT_URL = 'list_books'
-LOGOUT_REDIRECT_URL = 'login'
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +41,7 @@ INSTALLED_APPS = [
     'LibraryProject.relationship_app',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,6 +51,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# Authentication settings - consolidated and corrected
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'  # Redirects to home after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirects to login after logout
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
