@@ -4,37 +4,97 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import DetailView
 from django.http import HttpResponse, HttpResponseForbidden
-
 from .models import Book, Library, UserProfile
+from django.core.exceptions import PermissionDenied
 
 
-# Role check helpers
+
 def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    """
+    Check if the user has Admin role.
+    """
+    if not user.is_authenticated:
+        return False
+    try:
+        return user.userprofile.role == 'Admin'
+    except UserProfile.DoesNotExist:
+        return False
+
 
 def is_librarian(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+    """
+    Check if the user has Librarian role.
+    """
+    if not user.is_authenticated:
+        return False
+    try:
+        return user.userprofile.role == 'Librarian'
+    except UserProfile.DoesNotExist:
+        return False
+
 
 def is_member(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+    """
+    Check if the user has Member role.
+    """
+    if not user.is_authenticated:
+        return False
+    try:
+        return user.userprofile.role == 'Member'
+    except UserProfile.DoesNotExist:
+        return False
 
 
-# Admin view
-@user_passes_test(is_admin)
+
+@login_required
 def admin_view(request):
-    return render(request, 'relationship_app/admin_view.html')
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+        if user_profile.role == 'Admin':
+            return render(request, 'relationship_app/admin_home.html')  # this template must exist
+        else:
+            return HttpResponseForbidden("You are not authorized to view this page.")
+    except UserProfile.DoesNotExist:
+        return HttpResponseForbidden("User profile not found.")
 
 
-# Librarian view
-@user_passes_test(is_librarian)
+
+@login_required
+@user_passes_test(is_librarian, login_url='/access_denied/')
 def librarian_view(request):
-    return render(request, 'relationship_app/librarian_view.html')
+    """
+    View accessible only to users with Librarian role.
+    """
+    context = {
+        'user_role': request.user.userprofile.role,
+        'page_title': 'Librarian Dashboard',
+        'welcome_message': f'Welcome, {request.user.username}! You have librarian access.',
+    }
+    return render(request, 'librarian_view.html', context)
 
 
-# Member view
-@user_passes_test(is_member)
+@login_required
+@user_passes_test(is_member, login_url='/access_denied/')
 def member_view(request):
-    return render(request, 'relationship_app/member_view.html')
+    """
+    View accessible only to users with Member role.
+    """
+    context = {
+        'user_role': request.user.userprofile.role,
+        'page_title': 'Member Dashboard',
+        'welcome_message': f'Welcome, {request.user.username}! You have member access.',
+    }
+    return render(request, 'member_view.html', context)
+
+
+def access_denied(request):
+    """
+    View to handle access denied scenarios.
+    """
+    context = {
+        'message': 'Access Denied: You do not have permission to view this page.',
+    }
+    return render(request, 'access_denied.html', context, status=403)
 
 
 # Registration view
