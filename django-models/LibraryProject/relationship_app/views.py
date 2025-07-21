@@ -24,21 +24,21 @@ def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view to display library details
+
+
+# Class-based view for library details 
 class LibraryDetailView(DetailView):
-    """
-    Class-based view that displays details for a specific library,
-    listing all books available in that library.
-    Utilizes Django's DetailView to structure this class-based view.
-    """
+    """Create a class-based view that displays details for a specific library, listing all books available in that library."""
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['books'] = self.object.books.all()  # Get all books in this library
+        context['books'] = self.object.books.all()  # Now this will work with related_name='books'
         return context
+
+
 
 
 def is_admin(user):
