@@ -28,4 +28,3 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('LibraryProject.relationship_app.urls')),
 ]
-

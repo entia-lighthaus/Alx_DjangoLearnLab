@@ -1,8 +1,16 @@
+# relationship_app/urls.py
 from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView
 from . import views
+from .views import LibraryDetailView
+from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
+    # Function-based view for listing all books
+    path('books/', views.list_books, name='list_books'),
+    
+    # Class-based view for library detail
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+
     # Book management URLs 
     path('add_book/', views.add_book, name='add_book'),
     path('edit_book/', views.edit_book, name='edit_book'),
@@ -24,7 +32,5 @@ urlpatterns = [
     # Access control
     path('access_denied/', views.access_denied, name='access_denied'),
     
-    # Library functionality
-    path('books/', views.list_books, name='list_books'),
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
+
 ]
