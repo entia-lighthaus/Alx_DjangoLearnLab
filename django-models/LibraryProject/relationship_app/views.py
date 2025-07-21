@@ -11,7 +11,10 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
-from .models import Book, Library, UserProfile
+from .models import Library
+from .models import Book
+from .models import Author
+from .models import UserProfile
 from .forms import BookForm
 
 
@@ -22,7 +25,6 @@ def list_books(request):
     """
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
-
 
 
 # Class-based view for library details 
