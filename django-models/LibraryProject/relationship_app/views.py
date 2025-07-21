@@ -1,10 +1,10 @@
-from .models import Book, Library, UserProfile
 from django.contrib.auth.decorators import permission_required
+from .models import Book, Library, UserProfile
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import DetailView
+from django.views.generic import ListView, DetailView
 from django.http import HttpResponse, HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import LoginView
@@ -14,9 +14,32 @@ from .forms import BookForm
 
 
 
+
+# Function-based view to list all books
+def list_books(request):
+    """
+    Function-based view that lists all books with their authors.
+    This view can render a simple text list of book titles and their authors.
+    """
+    books = Book.objects.all()
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
+# Class-based view to display library details
+class LibraryDetailView(DetailView):
+    """
+    Class-based view that displays details for a specific library,
+    listing all books available in that library.
+    Utilizes Django's DetailView to structure this class-based view.
+    """
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
+
+
+
 def is_admin(user):
     """
-    Check if the user has Admin role.
+    User Admin role.
     """
     if not user.is_authenticated:
         return False
@@ -28,7 +51,7 @@ def is_admin(user):
 
 def is_librarian(user):
     """
-    Check if the user has Librarian role.
+   User Librarian role.
     """
     if not user.is_authenticated:
         return False
@@ -40,7 +63,7 @@ def is_librarian(user):
 
 def is_member(user):
     """
-    Check if the user has Member role.
+    user has Member role.
     """
     if not user.is_authenticated:
         return False
@@ -138,28 +161,8 @@ def register(request):
     return render(request, 'relationship_app/register.html', {'form': form})
 
 
-# Book list
-def list_books(request):
-    """
-    List all books.
-    """
-    books = Book.objects.all()
-    return render(request, "relationship_app/list_books.html", {"books": books})
-
-
-# Library detail view
-class LibraryDetailView(DetailView):
-    """
-    Detail view for library.
-    """
-    model = Library
-    template_name = 'relationship_app/library_detail.html'
-    context_object_name = 'library'
-
-
-# ========================
 # NEW PERMISSION-BASED VIEWS FOR TASK 4
-# ========================
+
 
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
