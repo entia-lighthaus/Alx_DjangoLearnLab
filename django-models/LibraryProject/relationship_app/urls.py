@@ -1,8 +1,10 @@
 # relationship_app/urls.py
+from .views import list_books
+from django.urls import path
 from django.urls import path
 from . import views
-from .views import LibraryDetailView
-from django.contrib.auth.views import LoginView, LogoutView
+from .views import LibraryDetailView, LoginView, LogoutView
+
 
 urlpatterns = [
     # Function-based view for listing all books
