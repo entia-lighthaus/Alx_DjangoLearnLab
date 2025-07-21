@@ -19,7 +19,6 @@ from .forms import BookForm
 def list_books(request):
     """
     Function-based view that lists all books with their authors.
-    This view should render a simple text list of book titles and their authors.
     """
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -35,7 +34,7 @@ class LibraryDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['books'] = self.object.books.all()  # Now this will work with related_name='books'
+        context['books'] = self.object.books.all()  
         return context
 
 
