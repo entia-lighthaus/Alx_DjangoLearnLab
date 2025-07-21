@@ -1,3 +1,4 @@
+from .models import Book, Library, UserProfile
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -5,7 +6,6 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import DetailView
 from django.http import HttpResponse, HttpResponseForbidden
-from .models import Book, Library, UserProfile
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login as auth_login
