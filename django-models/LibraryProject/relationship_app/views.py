@@ -1,25 +1,25 @@
+# relationship_app/views.py
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import permission_required
-from .models import Book, Library, UserProfile
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import ListView, DetailView
 from django.http import HttpResponse, HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
-from .forms import BookForm 
-
-
+from .models import Book, Library, UserProfile
+from .forms import BookForm
 
 
 # Function-based view to list all books
 def list_books(request):
     """
     Function-based view that lists all books with their authors.
-    This view can render a simple text list of book titles and their authors.
+    This view should render a simple text list of book titles and their authors.
     """
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -34,7 +34,6 @@ class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
-
 
 
 def is_admin(user):
