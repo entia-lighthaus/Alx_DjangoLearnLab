@@ -1,6 +1,7 @@
 # relationship_app/views.py
+from django.views.generic.detail import DetailView
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect, get_object_or_404
