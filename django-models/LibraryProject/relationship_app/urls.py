@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
 urlpatterns = [
-    # Book management URLs - exactly as expected by ALX checker
+    # Book management URLs 
     path('add_book/', views.add_book, name='add_book'),
     path('edit_book/', views.edit_book, name='edit_book'),
     path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
@@ -16,7 +16,7 @@ urlpatterns = [
     # Home and main pages
     path('', views.home_view, name='home'),
     
-    # Role-based views (these are critical for ALX checks)
+    # Role-based views 
     path('admin/', views.admin_view, name='admin_view'),
     path('librarian/', views.librarian_view, name='librarian_view'),
     path('member/', views.member_view, name='member_view'),
