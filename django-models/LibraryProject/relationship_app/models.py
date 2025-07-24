@@ -1,8 +1,9 @@
 # Create your models here.
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
 
 # UserProfile Model
 class UserProfile(models.Model):
@@ -12,7 +13,8 @@ class UserProfile(models.Model):
         ('Member', 'Member'),
     ]
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    #user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
     def __str__(self):
@@ -31,19 +33,24 @@ class UserProfile(models.Model):
         return self.role == 'Member'
 
 
-# Automatically create UserProfile when a User is created
+
+
+
+
+User = get_user_model()
+
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance, role='Member')  # Default role
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    if hasattr(instance, 'userprofile'):
-        instance.userprofile.save()
+        # Only create if it doesn't exist
+        UserProfile.objects.get_or_create(user=instance, defaults={'role': 'Member'})
     else:
-        UserProfile.objects.create(user=instance)
+        # Only save if profile exists
+        try:
+            instance.userprofile.save()
+        except UserProfile.DoesNotExist:
+            UserProfile.objects.create(user=instance, role='Member')
+
 
 
 # Author Model
@@ -63,11 +70,13 @@ class Library(models.Model):
         return self.name
 
 
-# Book Model
+
+
+# Book Model 
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    library = models.ForeignKey(Library, on_delete=models.CASCADE)
+    library = models.ForeignKey(Library, on_delete=models.CASCADE, related_name='books')  # Added related_name
     publication_year = models.IntegerField()
     
     class Meta:
@@ -75,11 +84,11 @@ class Book(models.Model):
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book"),
-        
         ]
     
     def __str__(self):
         return self.title
+    
 
 
 
