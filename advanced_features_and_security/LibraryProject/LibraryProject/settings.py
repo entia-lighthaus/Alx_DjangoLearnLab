@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LibraryProject.relationship_app',
     'LibraryProject.bookshelf',
+    'LibraryProject.relationship_app',
+
 
 ]
 
@@ -56,11 +58,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 # Authentication settings - consolidated and corrected
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'  # Redirects to home after login
-LOGOUT_REDIRECT_URL = '/login/'  # Redirects to login after logout
+
+LOGIN_REDIRECT_URL = '/books/'
+LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+
 
 ROOT_URLCONF = 'LibraryProject.urls'
+
 
 TEMPLATES = [
     {

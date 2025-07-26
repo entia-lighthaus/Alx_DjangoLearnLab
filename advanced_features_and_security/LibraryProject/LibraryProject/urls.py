@@ -25,6 +25,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('books/', include('bookshelf.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('LibraryProject.relationship_app.urls')),
+    path('bookshelf/', include('LibraryProject.bookshelf.urls')),
 ]
