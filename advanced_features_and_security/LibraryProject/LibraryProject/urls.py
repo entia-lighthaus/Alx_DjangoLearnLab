@@ -17,9 +17,6 @@ Including another URLconf
 
 
 # LibraryProject/urls.py
-# Update your main project's urls.py file
-
-
 from django.contrib import admin
 from django.urls import path, include
 

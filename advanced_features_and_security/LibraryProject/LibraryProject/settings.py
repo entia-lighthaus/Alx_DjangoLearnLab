@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +29,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Authentication settings - consolidated and corrected
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/books/'
+
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+ROOT_URLCONF = 'LibraryProject.LibraryProject.urls'
+
 
 # Application definition
 
@@ -40,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'LibraryProject.bookshelf',
-    'LibraryProject.relationship_app',
+    'relationship_app',
 
 
 ]
@@ -57,15 +67,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# Authentication settings - consolidated and corrected
-
-LOGIN_REDIRECT_URL = '/books/'
-LOGIN_URL = '/accounts/login/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-
-
-ROOT_URLCONF = 'LibraryProject.urls'
 
 
 TEMPLATES = [
@@ -137,3 +138,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
