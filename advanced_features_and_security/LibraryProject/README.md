@@ -1,3 +1,24 @@
+# Django Access Control Setup
+
+This project uses Django's Groups and Permissions system to manage user access.
+
+## Permissions Added
+- `can_view`: View articles
+- `can_create`: Create new articles
+- `can_edit`: Edit existing articles
+- `can_delete`: Delete articles
+
+## Groups Configured
+- Viewers
+- Editors
+- Admins
+
+## Usage
+Assign users to groups via admin or shell. Views are protected with `@permission_required` decorators.
+
+
+
+
 # 📚 LibraryProject
 
 LibraryProject is a beginner-friendly Django project created to manage and store information about books in a virtual library. This project is part of the **Alx_DjangoLearnLab** and serves as an introduction to Django's architecture, development environment, and workflow.
