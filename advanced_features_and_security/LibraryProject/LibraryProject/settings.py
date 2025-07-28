@@ -25,31 +25,47 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9y@k(aj5y97w9pt!vxg=$2!5nrik8$7ixj6_uq4g#o*!--e9j&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False  # Never True in production!
 
-ALLOWED_HOSTS = []
+# Browser security headers
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# HTTPS-only cookies
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Optional but recommended
+SECURE_HSTS_SECONDS = 31536000  # Enables HTTP Strict Transport Security
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'yourdomain.com']
 
 # Authentication settings - consolidated and corrected
 
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/books/'
-
+LOGIN_URL = '/accounts/login/'  # this matches your login route
+LOGIN_REDIRECT_URL = '/user-permissions/'  # fallback redirect
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
-ROOT_URLCONF = 'LibraryProject.LibraryProject.urls'
+ROOT_URLCONF = 'LibraryProject.urls'
+
 
 
 # Application definition
 
 INSTALLED_APPS = [
-  
+    'csp',  # Added for Content Security Policy
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LibraryProject.bookshelf',
+    'bookshelf',
     'relationship_app',
 
 
@@ -58,8 +74,10 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',  # CSP Middleware added
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,6 +85,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+# Content Security Policy (CSP) Settings
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com", "https://ajax.googleapis.com")
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com")
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
+CSP_IMG_SRC = ("'self'", "data:")
+CSP_OBJECT_SRC = ("'none'",)
+CSP_BASE_URI = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+
 
 
 TEMPLATES = [

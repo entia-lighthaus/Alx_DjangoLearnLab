@@ -19,11 +19,14 @@ Including another URLconf
 # LibraryProject/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from bookshelf.views import SmartLoginView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/login/', SmartLoginView.as_view(), name='login'),
+    path('accounts/', include('django.contrib.auth.urls')),  # handles logout, password reset
     path('books/', include('bookshelf.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('LibraryProject.relationship_app.urls')),
-    path('bookshelf/', include('LibraryProject.bookshelf.urls')),
+    path('bookshelf/', include('bookshelf.urls')),
+    path('', include('relationship_app.urls')),
 ]

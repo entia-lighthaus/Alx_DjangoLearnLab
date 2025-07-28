@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib import messages
@@ -5,6 +6,25 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseForbidden
 from .models import Book
 from .forms import BookForm  
+from django.conf import settings
+
+
+class SmartLoginView(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+
+        if user.groups.filter(name='Admins').exists():
+            return '/books/admin/'  # Create this view/template
+        elif user.groups.filter(name='Editors').exists():
+            return '/books/editor/'  # Create this view/template
+        elif user.groups.filter(name='Viewers').exists():
+            return '/books/'  # book_list view — already exists!
+        
+        # Fallback
+        return settings.LOGIN_REDIRECT_URL
+    
+
+
 
 # Book List View - Requires can_view permission
 @login_required
