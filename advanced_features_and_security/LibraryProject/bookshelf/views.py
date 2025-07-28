@@ -5,8 +5,10 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseForbidden
 from .models import Book
+from .forms import ExampleForm
 from .forms import BookForm  
 from django.conf import settings
+
 
 
 class SmartLoginView(LoginView):
@@ -23,6 +25,19 @@ class SmartLoginView(LoginView):
         # Fallback
         return settings.LOGIN_REDIRECT_URL
     
+
+
+@login_required
+def example_form_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            messages.success(request, 'Form submitted successfully!')
+            return redirect('example_form')
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
+
 
 
 
