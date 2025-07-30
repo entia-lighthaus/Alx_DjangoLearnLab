@@ -50,9 +50,10 @@ REST_FRAMEWORK = {
     ],
     
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # We'll change this in Step 3
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
 
 
 MIDDLEWARE = [
