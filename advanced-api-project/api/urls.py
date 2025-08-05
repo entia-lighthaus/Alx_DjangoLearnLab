@@ -4,14 +4,16 @@ from .views import (
     BookDetailView,
     BookCreateView,
     BookUpdateView,
-    BookDeleteView
+    BookDeleteView,
 )
 
 urlpatterns = [
     path('books/', BookListView.as_view(), name='book-list'),
     path('books/<int:pk>/', BookDetailView.as_view(), name='book-detail'),
     path('books/create/', BookCreateView.as_view(), name='book-create'),
-    path('books/<int:pk>/update/', BookUpdateView.as_view(), name='book-update'),
-    path('books/<int:pk>/delete/', BookDeleteView.as_view(), name='book-delete'),
+
+    # Update and delete paths
+    path('books/update/<int:pk>/', BookUpdateView.as_view(), name='book-update'),
+    path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete'),
 ]
-# This file defines the URL patterns for the API endpoints related to books.
+
