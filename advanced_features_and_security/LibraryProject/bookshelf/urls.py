@@ -11,3 +11,4 @@ urlpatterns = [
     # Permission testing view
     path('permissions/', views.user_permissions, name='user_permissions'),
 ]
+
