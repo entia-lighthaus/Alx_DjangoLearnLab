@@ -22,3 +22,15 @@ This project uses Django REST Framework generic views to manage Book data via a 
 ### Serializer Validation
 
 - `publication_year` is validated to ensure it is not in the future.
+
+
+
+
+### BookListView API Features
+
+- **Filter books by title, author, or year:**
+  `/api/books/?publication_year=2022`
+- **Search for books by title or author name:**
+  `/api/books/?search=Chinua`
+- **Order books by title or publication year:**
+  `/api/books/?ordering=title`
