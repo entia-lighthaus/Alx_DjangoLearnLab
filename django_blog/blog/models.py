@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from PIL import Image
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -23,3 +26,35 @@ class Post(models.Model):
 # related_name='blog_posts': Allows you to access a user's posts with user.blog_posts.all()
 # __str__: Returns the title when the model is printed (useful in Django admin)
 # Meta.ordering: Orders posts by newest first (the - means descending order)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    location = models.CharField(max_length=30, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    website = models.URLField(max_length=200, blank=True)
+    
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        # Resize image if it's too large
+        img = Image.open(self.profile_picture.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.profile_picture.path)
+
+# Create a profile automatically when a user is created
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()
