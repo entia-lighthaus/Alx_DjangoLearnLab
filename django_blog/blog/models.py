@@ -5,6 +5,9 @@ from django.dispatch import receiver
 from PIL import Image
 from django.urls import reverse 
 from django.utils.text import slugify
+from taggit.managers import TaggableManager
+
+
 
 # Blog Post Model
 # This model represents a blog post in the application.
@@ -17,6 +20,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     #slug = models.SlugField(unique=True, blank=True)
     slug = models.SlugField(null=True, blank=True) 
+    tags = TaggableManager()  # Allows tagging of posts
+
 
     def save(self, *args, **kwargs): 
         if not self.slug:

@@ -41,4 +41,7 @@ urlpatterns = [
          views.user_comments, 
          name='user_comments'),
 
+    # Search and Tag URLs
+    path('search/', views.search_posts, name='search_posts'),
+    path('tags/<slug:tag_slug>/', views.posts_by_tag, name='posts_by_tag'),
 ]

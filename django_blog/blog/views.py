@@ -12,8 +12,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .forms import CommentForm, CommentEditForm, CommentDeleteForm
-
-
+from taggit.models import Tag
 
 # authentication views
 def home(request):
@@ -318,3 +317,28 @@ def user_comments(request, username):
     }
     
     return render(request, 'blog/user_comments.html', context)
+
+
+# Search functionality for blog posts
+# This view allows users to search for blog posts by title, content, or tags.
+def search_posts(request):
+    query = request.GET.get('q')
+    results = Post.objects.filter(
+        Q(title__icontains=query) |
+        Q(content__icontains=query) |
+        Q(tags__name__icontains=query)
+    ).distinct()
+    return render(request, 'blog/search_results.html', {'results': results, 'query': query})
+
+
+
+
+# Tag-based filtering for blog posts
+# This view allows users to filter posts by specific tags.
+def posts_by_tag(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = Post.objects.filter(tags__name__iexact=tag.name)
+    return render(request, 'blog/posts_by_tag.html', {
+        'tag': tag,
+        'posts': posts
+    })
