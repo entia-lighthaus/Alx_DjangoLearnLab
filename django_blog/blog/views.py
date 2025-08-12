@@ -14,6 +14,24 @@ from django.db.models import Q
 from .forms import CommentForm, CommentEditForm, CommentDeleteForm
 from taggit.models import Tag
 
+
+# PostByTagListView
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.kwargs.get('tag_slug')
+        return context
+    
+    
 # authentication views
 def home(request):
     posts = Post.objects.all()[:5]  # Get latest 5 posts
@@ -342,3 +360,5 @@ def posts_by_tag(request, tag_slug):
         'tag': tag,
         'posts': posts
     })
+
+
