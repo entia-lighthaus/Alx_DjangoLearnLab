@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from PIL import Image
 from django.urls import reverse 
+from django.utils.text import slugify
 
 # Blog Post Model
 # This model represents a blog post in the application.
@@ -14,7 +15,21 @@ class Post(models.Model):
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
-    
+    #slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(null=True, blank=True) 
+
+    def save(self, *args, **kwargs): 
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Post.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+       
     def __str__(self):
         return self.title
     
@@ -72,3 +87,49 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+
+# This model represents comments on blog posts.
+# It includes fields for the post, author, content, and timestamps.
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post, 
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    author = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    content = models.TextField(
+        max_length=1000,
+        help_text="Share your thoughts (max 1000 characters)"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    # Optional: Add moderation fields
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['created_at']  # Oldest comments first
+        indexes = [
+            models.Index(fields=['post', '-created_at']),
+            models.Index(fields=['author', '-created_at']),
+        ]
+
+    def __str__(self):
+        return f'Comment by {self.author.username} on {self.post.title}'
+
+    def get_absolute_url(self):
+        return reverse('blog:post_detail', kwargs={'slug': self.post.slug}) + f'#comment-{self.id}'
+
+    def can_edit(self, user):
+        """Check if a user can edit this comment"""
+        return self.author == user or user.is_staff
+
+    def can_delete(self, user):
+        """Check if a user can delete this comment"""
+        return self.author == user or user.is_staff

@@ -24,6 +24,27 @@ urlpatterns = [
     path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
     path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
+
+
+    # Comment-related URLs
+    path('post/<int:pk>/comment/new/', views.CommentCreateView.as_view(), name='comment_create'),
+    
+    path('comment/<int:comment_id>/edit/', 
+         views.CommentUpdateView.as_view(), 
+         name='comment_edit'),
+    
+    path('comment/<int:comment_id>/delete/', 
+         views.CommentDeleteView.as_view(), 
+         name='comment_delete'),
+    
+    # AJAX endpoint for comments (optional)
+    path('post/<slug:slug>/comment/ajax/', 
+         views.comment_ajax_create, 
+         name='comment_ajax_create'),
+    
+    # User comments page
+    path('user/<str:username>/comments/', 
+         views.user_comments, 
+         name='user_comments'),
+
 ]
-
-
