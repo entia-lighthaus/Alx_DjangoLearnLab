@@ -12,10 +12,16 @@
         <nav>
             <ul>
                 <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#">Blog Posts</a></li>
+                <li><a href="{% url 'post-list' %}">All Posts</a></li>
                 {% if user.is_authenticated %}
+                    <li><a href="{% url 'post-create' %}">New Post</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn">Logout</button>
+                        </form>
+                    </li>
                     <li>Welcome, {{ user.username }}!</li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>

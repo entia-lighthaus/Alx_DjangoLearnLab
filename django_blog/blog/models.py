@@ -3,7 +3,12 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from PIL import Image
+from django.urls import reverse 
 
+# Blog Post Model
+# This model represents a blog post in the application.
+# It includes fields for the post title, content, published date, and author.
+# The title is a CharField with a maximum length of 200 characters.
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -12,6 +17,9 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'pk': self.pk}) # URL for the post detail view
     
     class Meta:
         ordering = ['-published_date']  # Show newest posts first
@@ -28,12 +36,18 @@ class Post(models.Model):
 # Meta.ordering: Orders posts by newest first (the - means descending order)
 
 
+
+# User Profile Model
+# This model extends the User model to include additional fields for user profiles.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+    # profile_picture: ImageField to store user's profile picture
+    # default='default.jpg': Use a default image if none is uploaded
+    profile_picture = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
     website = models.URLField(max_length=200, blank=True)
     
     def __str__(self):
