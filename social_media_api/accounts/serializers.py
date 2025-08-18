@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
-from .models import User
 from django.contrib.auth import get_user_model
+from accounts.models import CustomUser
 
 
 
@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 # This serializer is used to convert User model instances into JSON format and vice versa.
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
 
 
