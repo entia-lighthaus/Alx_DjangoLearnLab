@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 User = get_user_model()
 
@@ -27,3 +28,15 @@ class Comment(models.Model):
         return f"Comment by {self.author} on {self.post}"
 
 
+# This model represents a like on a post
+# It allows users to like posts, and prevents duplicate likes by using unique_together constraint.
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "post")  # prevents duplicate likes
+
+    def __str__(self):
+        return f"{self.user} liked {self.post}"

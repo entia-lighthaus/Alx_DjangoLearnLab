@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 
 # Serializer for Comment model
@@ -21,3 +21,12 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'author', 'title', 'content', 'created_at', 'updated_at', 'comments']
         read_only_fields = ['author', 'created_at', 'updated_at']
+
+
+# Serializer for Like model
+# It allows users to like posts and prevents duplicate likes.
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']
+        read_only_fields = ['user', 'created_at']
