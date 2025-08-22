@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-nf^hpu3a=l$k9o48hs2p-r3^#z!(xc@4gu3-!zslsr*@yn(*a4
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+#DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "socialmediaapi.onrender.com",
